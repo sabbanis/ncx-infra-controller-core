@@ -90,6 +90,19 @@ pub async fn find_all(txn: &mut PgConnection) -> DatabaseResult<Vec<ExpectedSwit
         .map_err(|err| DatabaseError::query(sql, err))
 }
 
+/// find_all_by_rack_id returns all expected switches for a given rack_id.
+pub async fn find_all_by_rack_id(
+    txn: &mut PgConnection,
+    rack_id: RackId,
+) -> DatabaseResult<Vec<ExpectedSwitch>> {
+    let sql = "SELECT * FROM expected_switches WHERE rack_id=$1";
+    sqlx::query_as(sql)
+        .bind(rack_id)
+        .fetch_all(txn)
+        .await
+        .map_err(|err| DatabaseError::query(sql, err))
+}
+
 pub async fn find_all_linked(txn: &mut PgConnection) -> DatabaseResult<Vec<LinkedExpectedSwitch>> {
     let sql = r#"
   SELECT

@@ -38,6 +38,7 @@ use crate::tests::common::api_fixtures::create_test_env;
 use crate::tests::common::api_fixtures::site_explorer::TestRackDbBuilder;
 
 mod fixtures;
+mod handler;
 use fixtures::rack::{mark_rack_as_deleted, set_rack_controller_state};
 
 #[derive(Debug, Default, Clone)]
@@ -125,6 +126,27 @@ async fn test_can_retrieve_rack_state_history(
             [0x01, 0x1A, 0x2B, 0x3C, 0x4D, 0x50],
             [0x01, 0x1A, 0x2B, 0x3C, 0x4D, 0x51],
         ])
+        .with_expected_switches(vec![[0x02, 0x1A, 0x2B, 0x3C, 0x4D, 0x50]])
+        .with_rack_capabilities(model::rack_type::RackCapabilitiesSet {
+            compute: model::rack_type::RackCapabilityCompute {
+                name: None,
+                count: 2,
+                vendor: None,
+                slot_ids: None,
+            },
+            switch: model::rack_type::RackCapabilitySwitch {
+                name: None,
+                count: 1,
+                vendor: None,
+                slot_ids: None,
+            },
+            power_shelf: model::rack_type::RackCapabilityPowerShelf {
+                name: None,
+                count: 2,
+                vendor: None,
+                slot_ids: None,
+            },
+        })
         .persist(&mut txn)
         .await?;
 

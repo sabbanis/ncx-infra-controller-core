@@ -1513,6 +1513,7 @@ pub struct TestRackDbBuilder {
     expected_power_shelves: Vec<MacAddress>,
     expected_switches: Vec<MacAddress>,
     rack_id: RackId,
+    rack_capabilities: Option<model::rack_type::RackCapabilitiesSet>,
 }
 
 impl Default for TestRackDbBuilder {
@@ -1522,6 +1523,7 @@ impl Default for TestRackDbBuilder {
             expected_power_shelves: vec![],
             expected_switches: vec![],
             rack_id: RackId::from(uuid::Uuid::new_v4()),
+            rack_capabilities: None,
         }
     }
 }
@@ -1554,6 +1556,19 @@ impl TestRackDbBuilder {
         self
     }
 
+    pub fn with_expected_switches(mut self, expected_switches: Vec<[u8; 6]>) -> Self {
+        self.expected_switches = expected_switches.into_iter().map(MacAddress::new).collect();
+        self
+    }
+
+    pub fn with_rack_capabilities(
+        mut self,
+        rack_capabilities: model::rack_type::RackCapabilitiesSet,
+    ) -> Self {
+        self.rack_capabilities = Some(rack_capabilities);
+        self
+    }
+
     pub async fn persist(&self, txn: &mut PgConnection) -> Result<RackId, DatabaseError> {
         db_rack::create(
             txn,
@@ -1569,7 +1584,9 @@ impl TestRackDbBuilder {
             compute_trays: vec![],
             power_shelves: vec![],
             expected_compute_trays: self.expected_compute_trays.clone(),
+            expected_switches: self.expected_switches.clone(),
             expected_power_shelves: self.expected_power_shelves.clone(),
+            rack_capabilities: self.rack_capabilities.clone(),
         };
 
         db_rack::update(txn, self.rack_id, &cfg).await?;
