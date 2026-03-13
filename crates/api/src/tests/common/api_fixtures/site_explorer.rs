@@ -1725,3 +1725,161 @@ pub async fn new_mock_host_with_dpf(
         .boxed()
         .await
 }
+
+/// create_expected_switches seeds 6 expected switches into the database,
+/// replacing the create_expected_switch.sql fixture.
+pub async fn create_expected_switches(txn: &mut sqlx::PgConnection) {
+    use model::expected_switch::ExpectedSwitch;
+    use model::metadata::Metadata;
+
+    let switches = vec![
+        ExpectedSwitch {
+            expected_switch_id: None,
+            bmc_mac_address: "0a:0b:0c:0d:0e:0f".parse().unwrap(),
+            serial_number: "SW-SN-001".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x7".into(),
+            nvos_username: None,
+            nvos_password: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedSwitch {
+            expected_switch_id: None,
+            bmc_mac_address: "1a:1b:1c:1d:1e:1f".parse().unwrap(),
+            serial_number: "SW-SN-002".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x7".into(),
+            nvos_username: None,
+            nvos_password: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedSwitch {
+            expected_switch_id: None,
+            bmc_mac_address: "2a:2b:2c:2d:2e:2f".parse().unwrap(),
+            serial_number: "SW-SN-003".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x7".into(),
+            nvos_username: None,
+            nvos_password: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedSwitch {
+            expected_switch_id: None,
+            bmc_mac_address: "3a:3b:3c:3d:3e:3f".parse().unwrap(),
+            serial_number: "SW-SN-004".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x7".into(),
+            nvos_username: Some("nvos_admin".into()),
+            nvos_password: Some("nvos_pass".into()),
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedSwitch {
+            expected_switch_id: None,
+            bmc_mac_address: "4a:4b:4c:4d:4e:4f".parse().unwrap(),
+            serial_number: "SW-SN-005".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x7".into(),
+            nvos_username: Some("nvos_admin2".into()),
+            nvos_password: Some("nvos_pass2".into()),
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedSwitch {
+            expected_switch_id: None,
+            bmc_mac_address: "5a:5b:5c:5d:5e:5f".parse().unwrap(),
+            serial_number: "SW-SN-006".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x7".into(),
+            nvos_username: None,
+            nvos_password: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+    ];
+
+    for switch in switches {
+        db::expected_switch::create(txn, switch)
+            .await
+            .expect("unable to create expected switch");
+    }
+}
+
+/// create_expected_power_shelves seeds 6 expected power shelves into the
+/// database, replacing the create_expected_power_shelf.sql fixture.
+pub async fn create_expected_power_shelves(txn: &mut sqlx::PgConnection) {
+    use model::expected_power_shelf::ExpectedPowerShelf;
+    use model::metadata::Metadata;
+
+    let power_shelves = vec![
+        ExpectedPowerShelf {
+            expected_power_shelf_id: None,
+            bmc_mac_address: "0a:0b:0c:0d:0e:0f".parse().unwrap(),
+            serial_number: "PS-SN-001".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x0x7".into(),
+            ip_address: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedPowerShelf {
+            expected_power_shelf_id: None,
+            bmc_mac_address: "1a:1b:1c:1d:1e:1f".parse().unwrap(),
+            serial_number: "PS-SN-002".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x0x7".into(),
+            ip_address: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedPowerShelf {
+            expected_power_shelf_id: None,
+            bmc_mac_address: "2a:2b:2c:2d:2e:2f".parse().unwrap(),
+            serial_number: "PS-SN-003".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x0x7".into(),
+            ip_address: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedPowerShelf {
+            expected_power_shelf_id: None,
+            bmc_mac_address: "3a:3b:3c:3d:3e:3f".parse().unwrap(),
+            serial_number: "PS-SN-004".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x0x7".into(),
+            ip_address: Some("192.168.1.100".parse().unwrap()),
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedPowerShelf {
+            expected_power_shelf_id: None,
+            bmc_mac_address: "4a:4b:4c:4d:4e:4f".parse().unwrap(),
+            serial_number: "PS-SN-005".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x0x7".into(),
+            ip_address: Some("192.168.1.101".parse().unwrap()),
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+        ExpectedPowerShelf {
+            expected_power_shelf_id: None,
+            bmc_mac_address: "5a:5b:5c:5d:5e:5f".parse().unwrap(),
+            serial_number: "PS-SN-006".into(),
+            bmc_username: "ADMIN".into(),
+            bmc_password: "Pwd2023x0x0x0x0x7".into(),
+            ip_address: None,
+            metadata: Metadata::default(),
+            rack_id: None,
+        },
+    ];
+
+    for power_shelf in power_shelves {
+        db::expected_power_shelf::create(txn, power_shelf)
+            .await
+            .expect("unable to create expected power shelf");
+    }
+}
